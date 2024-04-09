@@ -1,13 +1,19 @@
 #!/bin/bash
 
 create_directory() {
-	mkdir demo
+    if [ -d "demo" ]; then
+        echo "Directory already exists"
+        return 1
+    else
+        mkdir demo
+        echo "Directory created"
+    fi
 }
 
 if ! create_directory; then
-	echo "The code is being exited as the directory already exists"
-	exit 1
+    echo "The code is being exited as the directory already exists"
+    exit 1
 fi
 
-echo "this should not work beacuse the code is interrupted"
+echo "This line should not be executed if the directory already exists"
 

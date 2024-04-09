@@ -2,12 +2,6 @@
 
 # Deploy a Django app and handle errors
 
-# Function to send email notification when deployment fails
-send_email_notification() {
-    echo "Deployment failed. Sending email notification to admin..."
-    echo "Deployment of Django app failed. Please check." | mail -s "Django App Deployment Failed" jigyashu2001@gmail.com
-}
-
 # Function to clone the Django app code
 code_clone() {
     echo "Cloning the Django app..."
@@ -47,96 +41,40 @@ required_restarts() {
 # Function to deploy the Django app
 deploy() {
     echo "Building and deploying the Django app..."
+    cd django-notes-app || {
+        echo "Failed to change directory to django-notes-app."
+        return 1
+    }
     docker build -t notes-app . && docker-compose up -d || {
         echo "Failed to build and deploy the app."
-        send_email_notification
         return 1
     }
 }
 
-# Main function
-main() {
-    code_clone || return 1
-    install_requirements || return 1
-    required_restarts || return 1
-    deploy || return 1
-    echo "Django app deployed successfully."
-}
 
-# Execute main function
-main
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Main deployment script
+echo "********** DEPLOYMENT STARTED *********"
+
+# Clone the code
+if ! code_clone; then
+    cd django-notes-app || exit 1
+fi
+
+# Install dependencies
+if ! install_requirements; then
+    exit 1
+fi
+
+# Perform required restarts
+if ! required_restarts; then
+    exit 1
+fi
+
+# Deploy the app
+if ! deploy; then
+    echo "Deployment failed. Mailing the admin..."
+    # Add your sendmail or notification logic here
+    exit 1
+fi
+
+echo "********** DEPLOYMENT DONE *********"
