@@ -26,8 +26,7 @@ install_awscli() {
 
 wait_for_instance() {
     local instance_id="$1"
-    echo "Waiting for instance $instance_id to be in running state..."
-
+    echo "Waiting for instance $instance_id to be in running state..."                                                                                                                                       
     while true; do
         state=$(aws ec2 describe-instances --instance-ids "$instance_id" --query 'Reservations[0].Instances[0].State.Name' --output text)
         if [[ "$state" == "running" ]]; then
@@ -44,8 +43,7 @@ create_ec2_instance() {
     local key_name="$3"
     local subnet_id="$4"
     local security_group_ids="$5"
-    local instance_name="$6"
-
+    local instance_name="$6" 
     # Run AWS CLI command to create EC2 instance
     instance_id=$(aws ec2 run-instances \
         --image-id "$ami_id" \
@@ -75,11 +73,11 @@ main() {
     echo "Creating EC2 instance..."
 
     # Specify the parameters for creating the EC2 instance
-    AMI_ID=""
+    AMI_ID="your-ami-id"
     INSTANCE_TYPE="t2.micro"
-    KEY_NAME=""
-    SUBNET_ID=""
-    SECURITY_GROUP_IDS=""  # Add your security group IDs separated by space
+    KEY_NAME="your-key-name"
+    SUBNET_ID="your-subnet-id"
+    SECURITY_GROUP_IDS="your-security-group-ids"  # Add your security group IDs separated by space
     INSTANCE_NAME="Shell-Script-EC2-Demo"
 
     # Call the function to create the EC2 instance
@@ -89,3 +87,4 @@ main() {
 }
 
 main "$@"
+
